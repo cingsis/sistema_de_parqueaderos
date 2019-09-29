@@ -1,0 +1,185 @@
+/* Estilos del body */
+body{
+  margin: 0;
+  width: 100%;
+  min-height: 510px;
+  background-color: #7E8794;
+  color: #000;
+  overflow-x: hidden;
+}
+
+/* Footer */
+.footer
+{
+  width: 100%;
+  height: 110px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding: 20px;
+  color: #FFF;
+  line-height: 16px;
+  background-color: #1A456E;
+}
+
+/* Estilos para los inputs */
+.text-field{
+  width:100%;
+	overflow:hidden;
+	border:1px solid #505a68;
+	background:#798493;
+	font-weight:bold;
+	padding:0.5em;
+
+	-webkit-border-radius: 2em;
+	-moz-border-radius: 2em;
+	border-radius: 2em;
+
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+
+	-moz-box-shadow:   	0 1px 1px rgba(255,255,255,0.36);
+	-webkit-box-shadow: 0 1px 1px rgba(255,255,255,0.36);
+	box-shadow:
+}
+
+/* Contenedor del login */
+.div-login{
+  width: 100%;
+  max-width: 1045px;
+  min-height: 510px;
+  margin: 80px auto 0px auto;
+  padding: 2% 4% 2% 12%;
+  border-radius: 20px;
+}
+
+/* Estilos contenedor página inicio admin */
+.body{
+  width: 100%;
+  max-width: 1045px;
+  min-height: 510px;
+  margin: 60px auto 20px auto;
+  background-color: #EAEAEA;
+}
+
+/* Estilos para los inputs */
+.input{
+  display:block;
+	background:#fff;
+	font:1em/1.214em Arial, Helvetica, sans-serif;  /*14px/17px*/
+	color:#444;
+	width:100%;
+	padding:0.75em 1.5em;
+	border:1px solid #505762;
+	margin:0;
+
+	resize:none;
+
+	-moz-box-shadow:   	inset 0 0px 3px rgba(0,0,0,0.75);
+	-webkit-box-shadow: inset 0 0px 3px rgba(0,0,0,0.75);
+	box-shadow:         inset 0 0px 3px rgba(0,0,0,0.75);
+
+	-webkit-border-radius: 1.5em;
+	-moz-border-radius: 1.5em;
+	border-radius: 1.5em;
+
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+}
+
+/* Estilos para el boton del formulario de registro de usuarios */
+#registrar:hover{
+  border-radius: 30px;
+  background-color: #96B2D9;
+  font-size: 15px;
+  color: #FFF;
+  font-weight: bold;
+  padding: 2% 5% 4% 5%;
+  border: 2px solid #566270;
+}
+
+/*  */
+.title{
+  margin-top: -45px;
+  color: #FFF;
+}
+
+/* Estilos para margen superior */
+.top{
+  margin-top: 30px;
+}
+
+/* Estilos boton de login */
+.btn-login{
+	border-radius: 30px;
+  background-color: #96B2D9;
+  color: #FFF;
+  font-weight: 600;
+  padding: 2% 5% 4% 5%;
+  border: 1px solid #566270;
+}
+
+/* Estilos boton login */
+.btn-login:hover{
+	border-radius: 30px;
+  background-color: #96B2D9;
+  color: #FFF;
+  font-weight: bold;
+  padding: 2% 5% 4% 5%;
+  border: 2px solid #566270;
+}
+
+/* Estilos boton login */
+.btn-login:active{
+	border-radius: 30px;
+  background-color: #96B2D9;
+  color: #FFF;
+  font-weight: 600;
+  padding: 2% 5% 4% 5%;
+  border: 1px solid #566270;
+}
+
+/* Estilos nombre de usuario*/
+.user a{
+  text-decoration: none;
+  color: #000;
+}
+
+/* Estilos opción de logout */
+.logout{
+  font-weight: 600;
+}
+
+/* Select tipo de usuario formulario registro de usuarios*/
+#type{
+  padding-bottom: 3px !important;
+}
+
+#casco{
+  padding-bottom: 3px !important;
+}
+
+#TipoCobro{
+  padding-bottom: 3px !important;
+}
+
+/* Ocultar elementos */
+.ocultar{
+  display: none;
+  margin-top: 20px;
+}
+
+/* Estilos inputs readonly formulario registro Motos */
+#FechaLlegada{
+  background-color: #FFF;
+}
+
+#HoraLlegada{
+  background-color: #FFF;
+}
+
+#UsuarioLlegada{
+  background-color: #FFF;
+}
+/* Fin Estilos inputs readonly formulario registro Motos */

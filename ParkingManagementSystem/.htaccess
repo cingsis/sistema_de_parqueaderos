@@ -1,0 +1,32 @@
+# This file is - if you set up MINI correctly - not needed.
+# But, for fallback reasons (if you don't route your vhost to /public), it will stay here.
+RewriteEngine on
+# RewriteRule ^(css) - [L]
+# RewriteRule ^(js) - [L]
+
+#redireccionar de no www a www y viceversa
+#<IfModule mod_rewrite.c>
+  #RewriteCond %{HTTP_HOST} ^localhost:90/Proyecto/ [NC]
+  #RewriteRule (.*) http://localhost:90/Proyecto/$1 [R=301,L,QSA]
+#</IfModule>
+
+
+#Redireccionar de www a no www
+<IfModule mod_rewrite.c>
+  RewriteCond %{HTTP_HOST} ^www.localhost:90/Proyecto/ [NC]
+  RewriteRule (.*) http://localhost:90/Proyecto/$1 [R=301,L,QSA]
+</IfModule>
+
+#Redireccionar de HTTP a HTTPS
+#<IfModule mod_rewrite.c>
+  #RewriteCond %{HTTPS} off
+  #RewriteRule (.*) https://www.example.com/$1 [R=301,L,QSA]
+#</IfModule>
+
+#Redireccionar de HTTPS a HTTP
+#<IfModule mod_rewrite.c>
+  #RewriteCond %{HTTPS} on
+  #RewriteRule (.*) http://www.example.com/$1 [R=301,L,QSA]
+#</IfModule>
+
+RewriteRule ^(.*) public/$1 [L]
