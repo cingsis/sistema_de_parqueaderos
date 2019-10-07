@@ -3,7 +3,7 @@ body{
   margin: 0;
   width: 100%;
   min-height: 510px;
-  background-color: #7E8794;
+  background-color: #f9a023;
   color: #000;
   overflow-x: hidden;
 }
@@ -19,6 +19,11 @@ body{
   color: #FFF;
   line-height: 16px;
   background-color: #1A456E;
+}
+
+/* Color fuente negro */
+.color{
+  color: #7C7C7D !important;
 }
 
 /* Estilos para los inputs */
@@ -56,7 +61,15 @@ body{
 /* Estilos contenedor página inicio admin */
 .body{
   width: 100%;
-  max-width: 1045px;
+  max-width: 1120px;
+  min-height: 510px;
+  margin: 60px auto 20px auto;
+  background-color: #EAEAEA;
+}
+
+.body2{
+  width: 100%;
+  max-width: 1000px;
   min-height: 510px;
   margin: 60px auto 20px auto;
   background-color: #EAEAEA;
@@ -119,6 +132,25 @@ body{
   padding: 2% 5% 4% 5%;
   border: 1px solid #566270;
 }
+/* Estilos boton buscar */
+.btn-buscar{
+  border-radius: 30px;
+  background-color: #96B2D9;
+  color: #FFF;
+  font-weight: 600;
+  padding: 2% 5% 2% 5%;
+  border: 1px solid #566270;
+}
+
+.btn-buscar:hover{
+  border-radius: 30px;
+  background-color: #96B2D9;
+  color: #FFF;
+  font-weight: bold;
+  padding: 2% 5% 2% 5%;
+  border: 2px solid #566270;
+}
+/* Fin estilos boton buscar */
 
 /* Estilos boton login */
 .btn-login:hover{
@@ -183,3 +215,15 @@ body{
   background-color: #FFF;
 }
 /* Fin Estilos inputs readonly formulario registro Motos */
+
+/* Logo */
+.logo{
+  border-radius: 20px;
+  width: 10%;
+  height: 5%;
+}
+
+.title-search{
+  color: #CCC;
+  font-weight: bold;
+}

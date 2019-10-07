@@ -3,7 +3,10 @@
   <div class="row margin">
     <div class="col-xs-12 col-sm-12 col-md-12">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="nav-item nav-link" href="<?= URL;  ?>admin/index">Inicio</a>
+
+        <?php require APP . 'view/_templates/logo.php'; ?>
+
+        <a class="nav-item nav-link color" href="<?= URL;  ?>admin/index">Inicio</a>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <?php if ($_SERVER['REQUEST_URI'] == "/ParkingManagementSystem/admin/newUser"): ?>
@@ -22,7 +25,7 @@
   </div>
 </div>
 
-<div class="container body">
+<div class="container body2">
   <div class="row text-center top">
     <div class="col-xs-12 col-sm-12 col-md-12">
       <h2 class="top"><strong>Registro de Nuevos Usuarios</strong></h2>

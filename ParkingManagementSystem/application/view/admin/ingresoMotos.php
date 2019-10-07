@@ -3,7 +3,10 @@
   <div class="row margin">
     <div class="col-xs-12 col-sm-12 col-md-12">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="nav-item nav-link" href="<?= URL;  ?>admin/index">Inicio</a>
+
+        <?php require APP . 'view/_templates/logo.php'; ?>
+
+        <a class="nav-item nav-link color" href="<?= URL;  ?>admin/index">Inicio</a>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
               <a class="nav-item nav-link" href="<?= URL; ?>admin/newUser">Nuevo Usuario</a>
@@ -22,7 +25,7 @@
   </div>
 </div>
 
-<div class="container body">
+<div class="container body2">
   <div class="row text-center top">
     <div class="col-xs-12 col-sm-12 col-md-12">
       <h2 class="top"><strong>Ingreso de Motos</strong></h2>
@@ -105,7 +108,7 @@
           <label for="FechaLlegada">Fecha LLegada</label>
         </div>
         <div class="fom-group">
-          <input type="input" name="fechalllegada" id="FechaLlegada" value="<?= date('d-m-Y'); ?>" class="form-control input" readonly="true">
+          <input type="input" name="fechalllegada" id="FechaLlegada" value="<?= date('Y-m-d'); ?>" class="form-control input" readonly="true">
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-4">

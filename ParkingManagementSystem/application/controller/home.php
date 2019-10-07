@@ -280,4 +280,73 @@ class Home extends Controller
       exit;
     }
   }
+
+  public function buscarPlaca()
+  {
+    if (isset($_SESSION['SESION_INICIADA']) && $_SESSION['SESION_INICIADA'] == TRUE)
+    {
+      sleep(2);
+
+      $placa = $_POST['buscar'];
+
+      $this->mdlMovimientos->__SET("placa", $placa);
+      $busqueda = $this->mdlMovimientos->buscarPlaca();
+
+      if(count($busqueda) != 0)
+      {
+        $html = "";
+        foreach ($busqueda as $key => $value) {
+          $html .= '   <tr>';
+          $html .= '    <td><button class="btn btn-primary" onclick="">' . $value['placa'] . '</button></td>';
+          $html .= '    <td>' . $value['tipo'] . '</td>';
+          $html .= '    <td>' . $value['fecha_llegada'] . '</td>';
+          $html .= '    <td>' . $value['hora_llegada'] . '</td>';
+          $html .= '   </tr>';
+        }
+        echo json_encode([
+          'html' => $html,
+        ]);
+      }
+    }
+    else
+    {
+      header("Location: " . URL . "home/index");
+      exit;
+    }
+  }
+
+  public function buscarTodos()
+  {
+    if (isset($_SESSION['SESION_INICIADA']) && $_SESSION['SESION_INICIADA'] == TRUE)
+    {
+      sleep(2);
+
+      $buscarTodos = $this->mdlMovimientos->buscarTodos();
+
+      if(count($buscarTodos) != 0)
+      {
+        $html = "";
+        foreach ($buscarTodos as $key => $value) {
+          $html .= '   <tr>';
+          $html .= '    <td><button class="btn btn-primary" onclick="">' . $value['placa'] . '</button></td>';
+          $html .= '    <td>' . $value['tipo'] . '</td>';
+          $html .= '    <td>' . $value['fecha_llegada'] . '</td>';
+          $html .= '    <td>' . $value['hora_llegada'] . '</td>';
+          $html .= '   </tr>';
+        }
+        echo json_encode([
+          'html' => $html,
+        ]);
+      }
+      else
+      {
+        echo 2;
+      }
+    }
+    else
+    {
+      header("Location: " . URL . "home/index");
+      exit;
+    }
+  }
 }

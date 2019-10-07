@@ -16,6 +16,14 @@
   } );
 </script>
 
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#ingresosdia").DataTable();
+    $("#ingresossemanales").DataTable();
+    $("#registrosmensuales").DataTable();
+  });
+</script>
+
     <script>
         var url = "<?php echo URL; ?>";
     </script>
@@ -26,6 +34,8 @@
     <script src="<?php echo URL; ?>js/datatables.min.js"></script>
     <script src="<?php echo URL; ?>js/sweetalert.min.js"></script>
     <script src="<?php echo URL; ?>js/usuarios.js"></script>
+    <script src="<?php echo URL; ?>js/busqueda.js"></script>
+    <script src="<?php echo URL; ?>js/jquery.dataTables.min.js"></script>
 
 </body>
 </html>

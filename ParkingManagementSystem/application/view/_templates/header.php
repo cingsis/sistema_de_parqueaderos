@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="<?php echo URL ?>css/dataTables.min.css">
     <link rel="stylesheet" href="<?php echo URL ?>css/sweetalert.css">
     <link rel="stylesheet" href="<?php echo URL ?>css/404.css">
+    <link rel="stylesheet" href="<?php echo URL ?>css/jquery.dataTables.min.css">
 
 </head>
 <body>
