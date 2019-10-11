@@ -206,4 +206,57 @@ class Admin extends Controller
       exit;
     }
   }
+
+  public function registrarSalida()
+  {
+    if (isset($_SESSION['SESION_INICIADA']) && $_SESSION['SESION_INICIADA'] == TRUE)
+    {
+
+      if(isset($_POST['guardar']) && $_POST['guardar'] == "Registrar")
+      {
+        $id = $_POST['id'];
+        $placa = $_POST['numeroplaca'];
+        $tipo = $_POST['tipovehiculo'];
+        $fechaSalida = $_POST['fechasalida'];
+        $horaSalida = $_POST['horasalida'];
+        $dias = $_POST['diastranscurridos'];
+
+        $horas = $_POST['transcurrido'];
+        $hora = strtotime($horas);
+        $horaConvertida = date('H', $hora);
+
+        $valor = $_POST['valorcobro'];
+        $usuario = $_POST['usuarioactual'];
+        $estadoSalida = 1;
+
+        $this->mdlMovimientos->__SET("tipo", $tipo);
+        $this->mdlMovimientos->__SET("fechaSalida", $fechaSalida);
+        $this->mdlMovimientos->__SET("horaSalida", $horaSalida);
+        $this->mdlMovimientos->__SET("transcurrido", $dias . " días / " . $horaConvertida  . " horas");
+        $this->mdlMovimientos->__SET("valorCobro", $valor);
+        $this->mdlMovimientos->__SET("usuarioSalida", $usuario);
+        $this->mdlMovimientos->__SET("estadoSalida", (int)$estadoSalida);
+        $this->mdlMovimientos->__SET("id", $id);
+        $result = $this->mdlMovimientos->registrarSalida();
+
+        if($result)
+        {
+          $_SESSION['type'] = "success";
+          $_SESSION['message'] = "Registro guardado correctamente!";
+
+          header("Location: " . URL . "home/comprobanteSalida?id=" . $id);
+          exit;
+        }
+        else
+        {
+          $_SESSION['error'] = "danger";
+          $_SESSION['message'] = "Ha ocurrido un error al intentar guardar los datos, por favor inténtelo de nuevo!";
+
+          header("Location: " . URL . "admin/salidaMotos");
+          exit;
+        }
+      }
+
+    }
+  }
 }

@@ -91,7 +91,7 @@
           <label for="Placa">Número de Placa</label>
         </div>
         <div class="fom-group">
-          <input type="text" name="placa" id="Placa" autofocus="true" placeholder="Ingrese un número de placa" class="form-control input" required="true" maxlength="6">
+          <input type="text" name="placa" id="Placa" autofocus="true" placeholder="Ingrese un número de placa" class="form-control input" required="true" maxlength="8" minlength="1">
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-4">
@@ -108,7 +108,7 @@
           <label for="FechaLlegada">Fecha LLegada</label>
         </div>
         <div class="fom-group">
-          <input type="input" name="fechalllegada" id="FechaLlegada" value="<?= date('Y-m-d'); ?>" class="form-control input" readonly="true">
+          <input type="input" name="fechalllegada" id="FechaLlegada" value="<?= date('Y-m-d'); ?>" class="form-control input font-white" readonly="true">
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-4">
@@ -125,7 +125,7 @@
           <label for="HoraLlegada">Hora Llegada</label>
         </div>
         <div class="fom-group">
-          <input type="input" name="horallegada" id="HoraLlegada" value="<?= date('H:i:s') ?>" class="form-control input" readonly="true" >
+          <input type="input" name="horallegada" id="HoraLlegada" value="<?= date('H:i:s') ?>" class="form-control input font-white" readonly="true" >
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-4">
@@ -142,7 +142,7 @@
           <label for="UsuarioLlegada">Usuario de Llegada</label>
         </div>
         <div class="fom-group">
-          <input type="text" name="usuariollegada" id="UsuarioLlegada" value="<?= $_SESSION['login']; ?>" class="form-control input" readonly="true">
+          <input type="text" name="usuariollegada" id="UsuarioLlegada" value="<?= $_SESSION['login']; ?>" class="form-control input font-white" readonly="true">
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-4">

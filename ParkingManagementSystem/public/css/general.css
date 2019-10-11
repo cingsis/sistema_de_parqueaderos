@@ -129,7 +129,7 @@ body{
   background-color: #96B2D9;
   color: #FFF;
   font-weight: 600;
-  padding: 2% 5% 4% 5%;
+  /* padding: 2% 5% 4% 5%; */
   border: 1px solid #566270;
 }
 /* Estilos boton buscar */
@@ -154,22 +154,20 @@ body{
 
 /* Estilos boton login */
 .btn-login:hover{
-	border-radius: 30px;
+  border-radius: 30px;
   background-color: #96B2D9;
   color: #FFF;
   font-weight: bold;
-  padding: 2% 5% 4% 5%;
   border: 2px solid #566270;
 }
 
 /* Estilos boton login */
 .btn-login:active{
-	border-radius: 30px;
+  border-radius: 30px;
   background-color: #96B2D9;
   color: #FFF;
-  font-weight: 600;
-  padding: 2% 5% 4% 5%;
-  border: 1px solid #566270;
+  font-weight: bold;
+  border: 2px solid #566270;
 }
 
 /* Estilos nombre de usuario*/
@@ -196,24 +194,16 @@ body{
   padding-bottom: 3px !important;
 }
 
+.font-white{
+  background-color: #FFF !important;
+}
+
 /* Ocultar elementos */
 .ocultar{
   display: none;
   margin-top: 20px;
 }
 
-/* Estilos inputs readonly formulario registro Motos */
-#FechaLlegada{
-  background-color: #FFF;
-}
-
-#HoraLlegada{
-  background-color: #FFF;
-}
-
-#UsuarioLlegada{
-  background-color: #FFF;
-}
 /* Fin Estilos inputs readonly formulario registro Motos */
 
 /* Logo */
@@ -223,7 +213,15 @@ body{
   height: 5%;
 }
 
+/* Estilos título página salida de motos */
 .title-search{
   color: #CCC;
   font-weight: bold;
+}
+
+/* Estilos tabla salida motos */
+.auto-scroll{
+  overflow-x: auto !important;
+  height: 250px !important;
+  max-height: 500px !important;
 }

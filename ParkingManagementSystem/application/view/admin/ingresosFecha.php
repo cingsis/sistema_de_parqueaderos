@@ -79,7 +79,6 @@ if ($numerosemana > 0 and $numerosemana < 54)
         <tbody>
         <?php foreach ($ingresosDiarios as $value): ?>
           <tr>
-            <td><?= $value['id']; ?></td>
             <td><?= $value['placa']; ?></td>
             <td><?= $value['tipo']; ?></td>
             <td><?= $value['fecha_llegada']; ?></td>

@@ -18,6 +18,7 @@ class mdlMovimientos
   private $cliente;
   private $tieneCasco;
   private $fechaRegistro;
+  private $estadoSalida;
   private $db;
 
   public function __SET($attr, $valor)
@@ -99,6 +100,59 @@ class mdlMovimientos
     $stm = $this->db->prepare($sql);
     $stm->execute();
     return $stm->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function ultimoId()
+  {
+    $sql = "CALL  SP_ultimoId()";
+    $stm = $this->db->prepare($sql);
+    $stm->execute();
+    return $stm->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function registrarSalida()
+  {
+    $sql = "CAll SP_registrarSalida(?, ?, ?, ?, ?, ?, ?, ?)";
+    try {
+      $stm = $this->db->prepare($sql);
+      $stm->bindParam(1, $this->tipo);
+      $stm->bindParam(2, $this->fechaSalida);
+      $stm->bindParam(3, $this->horaSalida);
+      $stm->bindParam(4, $this->transcurrido);
+      $stm->bindParam(5, $this->valorCobro);
+      $stm->bindParam(6, $this->usuarioSalida);
+      $stm->bindParam(7, $this->estadoSalida);
+      $stm->bindParam(8, $this->id);
+      return $stm->execute();
+    } catch (PDOException $e) {
+      echo $e->getMessage();
+    }
+  }
+
+  public function traerDetalleRegistroEntrada()
+  {
+    $sql = "CAll SP_traerDetalleRegistroEntrada(?)";
+    try {
+      $stm = $this->db->prepare($sql);
+      $stm->bindParam(1, $this->id);
+      $stm->execute();
+      return $stm->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      echo $e->getMessage();
+    }
+  }
+
+  public function traerDetalleRegistroSalida()
+  {
+    $sql = "CAll SP_traerDetalleRegistroSalida(?)";
+    try {
+      $stm = $this->db->prepare($sql);
+      $stm->bindParam(1, $this->id);
+      $stm->execute();
+      return $stm->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      echo $e->getMessage();
+    }
   }
 
 }

@@ -31,9 +31,8 @@
       <h2 class="top"><strong>Salida de Motos</strong></h2>
     </div>
   </div>
-  <br/>
 
-  <form class="form-horizontal" action="#" method="post" autocomplete="off" id="formSalida" name="formsalida">
+  <form class="form-horizontal" method="post" autocomplete="off" id="formSalida" name="formsalida">
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-4 col-lg-1">
         <p>&nbsp;</p>
@@ -46,8 +45,9 @@
           <input type="text" name="buscar" placeholder="Ingrese un número de placa" class="form-control input" id="Placa">
         </div>
         <div class="form-group">
-          <button type="button" name="busqueda" class="btn btn-buscar" id="buscar" onclick="busquedaPorFiltro()">Buscar</button>
+          <button type="button" name="busqueda" class="btn btn-buscar" id="Busqueda" onclick="busquedaPorFiltro(event)">Buscar</button>
           <!-- <button type="button" name="listartodos" class="btn btn-buscar right" id="listarTodos" onclick="buscarTodos()">Listar Todos</button> -->
+          <button type="button" name="refresh" class="btn btn-buscar right" id="Refresh" onclick="actualizarPagina()">Recargar Página</button>
         </div>
       </div>
       <br/>
@@ -57,19 +57,21 @@
             <p>&nbsp;</p>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-10">
-            <table class="table table-striped ocultar" id="info">
-              <thead>
-                <tr>
-                  <th>Placa</th>
-                  <th>Tipo de Vehículo</th>
-                  <th>Fecha Llegada</th>
-                  <th>Hora Llegada</th>
-                </tr>
-              </thead>
-              <tbody id="resultado">
+            <div class="auto-scroll">
+              <table class="table table-striped ocultar" id="info">
+                <thead>
+                  <tr>
+                    <th>Placa</th>
+                    <th>Tipo de Vehículo</th>
+                    <th>Fecha Llegada</th>
+                    <th>Hora Llegada</th>
+                  </tr>
+                </thead>
+                <tbody id="resultado">
 
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-1">
             <p>&nbsp;</p>
@@ -77,6 +79,37 @@
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-3">
+        &nbsp;
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-6">
+        <?php if (isset($_SESSION['message']) && isset($_SESSION['type']) &&
+                  $_SESSION['type'] == "success"): ?>
+
+          <div class="alert alert-<?= $_SESSION['type'] ?>" role="alert">
+            <i class="far fa-laugh-beam fa-2x"></i>&nbsp;<?= $_SESSION['message']; ?>
+          </div>
+
+        <?php unset($_SESSION['message'], $_SESSION['type']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['message']) && isset($_SESSION['error']) &&
+                  $_SESSION['error'] == "danger"): ?>
+
+          <div class="alert alert-<?= $_SESSION['error'] ?>" role="alert">
+            <i class="far fa-angry fa-2x"></i>&nbsp;<?= $_SESSION['message']; ?>
+          </div>
+
+        <?php unset($_SESSION['message'], $_SESSION['error']); ?>
+        <?php endif; ?>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-3">
+        &nbsp;
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
         <p>&nbsp;</p>
@@ -85,8 +118,14 @@
 
         <div class="alert alert-info alert-dismissible ocultar" id="carga" role="alert">
           <p class="centrar">
-            <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>&nbsp;
-            <strong class="info">&nbsp;<span class="text-format-info">Realizando Búsqueda...
+            <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>&nbsp;<span class="text-format-info">Realizando Búsqueda...
+          </p>
+        </div>
+
+        <div class="alert alert-danger alert-dismissible ocultar" id="campovacio" role="alert">
+          <p class="centrar">
+            <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;
+            <strong>Error!</strong>&nbsp;Debes ingresar al menos 1 caracter para poder realizar la búsqueda...
           </p>
         </div>
 
@@ -97,25 +136,160 @@
     </div>
   </form>
 
-  <div class="row">
-    <form class="form-horizontal" action="" method="post" autocomplete="off">
+  <form class="form-horizontal" action="<?= URL; ?>admin/registrarSalida" method="post" autocomplete="off" name="registrosalida" id="RegistroSalida">
 
-    </form>
-    <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
-      <p>&nbsp;</p>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-      <div class="form-group">
-        <label for="numeroPlaca">Placa</label>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
       </div>
-      <div class="form-group">
-        <input type="text" name="numeroplaca" value="" id="numeroPlaca" class="form-control input">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group">
+          <label for="numeroPlaca">Placa</label>
+        </div>
+        <div class="form-group">
+          <input type="text" name="numeroplaca" value="" id="numeroPlaca" class="form-control input font-white" readonly="true">
+          <input type="hidden" name="id" value="" id="Id" class="form-control input font-white">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
       </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
-      <p>&nbsp;</p>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group">
+          <label for="TipoVeh">Tipo</label>
+        </div>
+        <div class="form-group">
+          <input type="text" name="tipovehiculo" value="" id="TipoVeh" class="form-control input font-white" readonly="true">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
     </div>
-  </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group">
+          <label for="FechaSalida">Fecha Salida</label>
+        </div>
+        <div class="form-group">
+          <input type="text" name="fechasalida" value="" id="FechaSalida" class="form-control input font-white" readonly="true">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group">
+          <label for="HoraSalida">Hora Salida</label>
+        </div>
+        <div class="form-group">
+          <input type="text" name="horasalida" value="" id="HoraSalida" class="form-control input font-white" readonly="true">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group">
+          <label for="DiasTranscurridos">Días Transcurridos</label>
+        </div>
+        <div class="form-group">
+          <input type="text" name="diastranscurridos" value="" id="DiasTranscurridos" class="form-control input font-white" readonly="true">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group">
+          <label for="Transcurrido">Horas Transcurridas</label>
+        </div>
+        <div class="form-group">
+          <input type="text" name="transcurrido" value="" id="Transcurrido" class="form-control input font-white" readonly="true">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group">
+          <label for="ValorCobro">Valor Cobro</label>
+        </div>
+        <div class="form-group">
+          <input type="text" name="valorcobro" value="" id="ValorCobro" class="form-control input font-white" readonly="true">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group">
+          <label for="UsuarioSalida">Usuario</label>
+        </div>
+        <div class="form-group">
+          <input type="text" name="usuarioactual" value="<?= $_SESSION['login']; ?>" id="UsuarioSalida" class="form-control input font-white" readonly="true">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-center">
+        <div class="form-group">
+          <input type="submit" name="guardar" value="Registrar" class="btn btn-login" id="registrarSalida">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-1 col-lg-2">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+
+  </form>
   <br/>
   <br/>
 </div>

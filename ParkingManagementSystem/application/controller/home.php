@@ -1,5 +1,7 @@
 <?php
 
+  use Dompdf\Dompdf;
+
 class Home extends Controller
 {
   private $mdlLogin;
@@ -211,25 +213,26 @@ class Home extends Controller
 
         if ($casco == "si")
         {
-          $resgistroIngreso = $this->mdlMovimientos->guardarIngreso();
+          $registroIngreso = $this->mdlMovimientos->guardarIngreso();
 
-          if ($resgistroIngreso)
-          {
-            $_SESSION['type'] = "success";
-            $_SESSION['message'] = "Registro guardado correctamente!";
+            if ($registroIngreso)
+            {
+              $_SESSION['type'] = "success";
+              $_SESSION['message'] = "Registro guardado correctamente!";
 
-            header("Location: " . URL . "admin/ingresoCascos");
-            exit;
+              header("Location: " . URL . "home/comprobanteIngreso");
+              exit;
+            }
+
+            else
+            {
+              $_SESSION['error'] = "danger";
+              $_SESSION['message'] = "Ha ocurrido un error al intentar guardar los datos, por favor inténtelo de nuevo!";
+
+              header("Location: " . URL . "admin/ingresoMotos");
+              exit;
+            }
           }
-          else
-          {
-            $_SESSION['error'] = "danger";
-            $_SESSION['message'] = "Ha ocurrido un error al intentar guardar los datos, por favor inténtelo de nuevo!";
-
-            header("Location: " . URL . "admin/ingresoMotos");
-            exit;
-          }
-        }
 
         if ($casco == "no")
         {
@@ -240,7 +243,7 @@ class Home extends Controller
             $_SESSION['type'] = "success";
             $_SESSION['message'] = "Registro de ingreso guardado correctamente!";
 
-            header("Location: " . URL . "admin/ingresoMotos");
+            header("Location: " . URL . "home/generarComprobanteIngreso");
             exit;
           }
           else
@@ -252,7 +255,6 @@ class Home extends Controller
             exit;
           }
         }
-
       }
       else
       {
@@ -265,6 +267,74 @@ class Home extends Controller
       header("Location: " . URL . "home/index");
       exit;
     }
+  }
+
+  public function comprobanteIngreso()
+  {
+    $ultimoId = $this->mdlMovimientos->ultimoId();
+
+    $id = $ultimoId[0]['ultimoId'];
+
+      if(isset($id))
+      {
+        $this->mdlMovimientos->__SET("id", $id);
+        $detalles = $this->mdlMovimientos->traerDetalleRegistroEntrada();
+
+        $tabla = "";
+        foreach ($detalles as $value)
+        {
+          $tabla .= '<tr>';
+          $tabla .= '<td class="center">' . $value['placa'] . '</td>';
+          $tabla .= '<td class="center">' . $value['tiene_casco'] . '</td>';
+          $tabla .= '<td class="center">' . $value['tipo_cobro'] . '</td>';
+          $tabla .= '</tr>';
+        }
+
+        require_once APP . 'libs/dompdf/autoload.inc.php';
+        ob_start();
+        require APP . 'view/admin/comprobanteIngresos.php';
+
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper([0,0,300,750], 'portrait');
+        $dompdf->render();
+        $dompdf->stream("Comprobante de ingreso.pdf", array("Attachment" => false, 'isRemoteEnabled' => true));
+      }
+  }
+
+  public function comprobanteSalida()
+  {
+
+    $id = $_GET['id'];
+
+      if(isset($id))
+      {
+        $this->mdlMovimientos->__SET("id", $id);
+        $detallesSalida = $this->mdlMovimientos->traerDetalleRegistroSalida();
+
+        $tabla = "";
+        foreach ($detallesSalida as $value)
+        {
+          $tabla .= '<tr>';
+          $tabla .= '<td class="center">' . $value['placa'] . '</td>';
+          $tabla .= '<td class="center">' . $value['fecha_salida'] . '</td>';
+          $tabla .= '<td class="center">' . $value['hora_salida'] . '</td>';
+          $tabla .= '<td class="center">' . $value['transcurrido'] . '</td>';
+          $tabla .= '</tr>';
+        }
+
+        require_once APP . 'libs/dompdf/autoload.inc.php';
+        ob_start();
+        require APP . 'view/admin/comprobanteSalida.php';
+
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper([0,0,350,770], 'portrait');
+        $dompdf->render();
+        $dompdf->stream("Comprobante de salida.pdf", array("Attachment" => false, 'isRemoteEnabled' => true));
+      }
   }
 
   public function ingresoCascos()
@@ -294,53 +364,106 @@ class Home extends Controller
 
       if(count($busqueda) != 0)
       {
+        $fecha_salida = date('Y-m-d');
+        $hora_salida = date('H:i:s');
+
+        $fecha_llegada =  $busqueda[0]['fecha_llegada'];
+        $hora_llegada =   $busqueda[0]['hora_llegada'];
+
+        $duracion = $hora_llegada - $hora_salida;
+        $horas = (int) $duracion/3600;
+        $duracion = $duracion - ($horas * 3600);
+        $minutos = (int) $duracion/60;
+        $segundos = $duracion - ($minutos * 60);
+
+        //desde aqui
+        $fechaini = $fecha_llegada;
+        $fechafin = $fecha_salida;
+
+      	$anioi = substr($fechaini,0,4);
+      	$mesi = substr($fechaini,5,2);
+      	$diai = substr($fechaini,8,2);
+
+      	$aniof = substr($fechafin,0,4);
+      	$mesf = substr($fechafin,5,2);
+      	$diaf = substr($fechafin,8,2);
+
+      	$aini = ($anioi);
+      	$afin = ($aniof);
+
+      	$adif = $afin - $aini;
+
+      	$mini = ($mesi);
+      	$mfin = ($mesf);
+
+      	$mdif = $mfin - $mini;
+
+      	$dini = ($diai);
+      	$dfin = ($diaf);
+
+      	$tddif = $dfin - $dini;
+
+        $diastotal = (($adif*360) + ($mdif*30) + ($tddif));
+
+        //hasta aqui
+
+        $horaini = $hora_llegada;
+        $horafin = $hora_salida;
+
+        	$horai = substr($horaini,0,2);
+        	$mini = substr($horaini,3,2);
+        	$segi = substr($horaini,6,2);
+
+        	$horaf = substr($horafin,0,2);
+        	$minf = substr($horafin,3,2);
+        	$segf = substr($horafin,6,2);
+
+        	$ini = ((($horai*60)*60) + ($mini*60) + $segi);
+        	$fin = ((($horaf*60)*60) + ($minf*60) + $segf);
+        	$dif = $fin-$ini;
+
+        	$difh = floor($dif/3600);
+        	$difm = floor(($dif-($difh*3600))/60);
+        	$difs = $dif-($difm*60) - ($difh*3600);
+
+        	$thdif = date("H:i:s",mktime($difh)) + (24*$diastotal);
+
+        	$transcurrido = date("H:i:s",mktime($difh,$difm,$difs));
+        //	echo 'Diferencia : ', $transcurrido;
+
+        	$valor_cobro = $thdif * 1000;
+
         $html = "";
-        foreach ($busqueda as $key => $value) {
+        foreach ($busqueda as $key => $value)
+        {
           $html .= '   <tr>';
-          $html .= '    <td><button class="btn btn-primary" onclick="">' . $value['placa'] . '</button></td>';
-          $html .= '    <td>' . $value['tipo'] . '</td>';
-          $html .= '    <td>' . $value['fecha_llegada'] . '</td>';
-          $html .= '    <td>' . $value['hora_llegada'] . '</td>';
+          $html .= '    <td id="td-placa"><button class="btn btn-primary" onclick="asociar(event)">' . $value['placa'] . '</button></td>';
+          $html .= '    <td id="td-tipo">' . $value['tipo'] . '</td>';
+          $html .= '    <td id="td-fecha">' . $value['fecha_llegada'] . '</td>';
+          $html .= '    <td id="td-hora">' . $value['hora_llegada'] . '</td>';
           $html .= '   </tr>';
         }
         echo json_encode([
           'html' => $html,
-        ]);
-      }
-    }
-    else
-    {
-      header("Location: " . URL . "home/index");
-      exit;
-    }
-  }
-
-  public function buscarTodos()
-  {
-    if (isset($_SESSION['SESION_INICIADA']) && $_SESSION['SESION_INICIADA'] == TRUE)
-    {
-      sleep(2);
-
-      $buscarTodos = $this->mdlMovimientos->buscarTodos();
-
-      if(count($buscarTodos) != 0)
-      {
-        $html = "";
-        foreach ($buscarTodos as $key => $value) {
-          $html .= '   <tr>';
-          $html .= '    <td><button class="btn btn-primary" onclick="">' . $value['placa'] . '</button></td>';
-          $html .= '    <td>' . $value['tipo'] . '</td>';
-          $html .= '    <td>' . $value['fecha_llegada'] . '</td>';
-          $html .= '    <td>' . $value['hora_llegada'] . '</td>';
-          $html .= '   </tr>';
-        }
-        echo json_encode([
-          'html' => $html,
+          'id' => $busqueda[0]['id'],
+          'transcurrido' => $transcurrido,
+          'dias_transcurridos' => $diastotal,
+          'fecha_salida' => $fecha_salida,
+          'hora_salida' => $hora_salida,
+          'valor_cobro' => $valor_cobro,
         ]);
       }
       else
       {
-        echo 2;
+        $html = "";
+        $html .= '<tr><td colspan="4">';
+        $html .= '<strong><p class="text-center">No se encontrarón datos con la ';
+        $html .= 'información proporcionada, por favor ingrese otra placa...!</p></strong>';
+        $html .= '</td></tr>';
+
+        echo json_encode([
+          'html' => $html,
+        ]);
       }
     }
     else
