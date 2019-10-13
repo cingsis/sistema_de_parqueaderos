@@ -203,12 +203,12 @@ class Home extends Controller
         $tipoCobro = $_POST['tipocobro'];
         $casco = $_POST['casco'];
 
-        $this->mdlMovimientos->__SET("placa", $placa);
-        $this->mdlMovimientos->__SET("tipo", $tipo);
+        $this->mdlMovimientos->__SET("placa", strtoupper($placa));
+        $this->mdlMovimientos->__SET("tipo", ucwords($tipo));
         $this->mdlMovimientos->__SET("fechaLlegada", $fechallegada);
         $this->mdlMovimientos->__SET("horaLlegada", $horallegada);
-        $this->mdlMovimientos->__SET("usuarioLlegada", $usuariollegada);
-        $this->mdlMovimientos->__SET("tipoCobro", $tipoCobro);
+        $this->mdlMovimientos->__SET("usuarioLlegada", ucwords($usuariollegada));
+        $this->mdlMovimientos->__SET("tipoCobro", ucwords($tipoCobro));
         $this->mdlMovimientos->__SET("tieneCasco", $casco);
 
         if ($casco == "si")
@@ -243,7 +243,7 @@ class Home extends Controller
             $_SESSION['type'] = "success";
             $_SESSION['message'] = "Registro de ingreso guardado correctamente!";
 
-            header("Location: " . URL . "home/generarComprobanteIngreso");
+            header("Location: " . URL . "home/comprobanteIngreso");
             exit;
           }
           else
@@ -285,8 +285,8 @@ class Home extends Controller
         {
           $tabla .= '<tr>';
           $tabla .= '<td class="center">' . $value['placa'] . '</td>';
-          $tabla .= '<td class="center">' . $value['tiene_casco'] . '</td>';
-          $tabla .= '<td class="center">' . $value['tipo_cobro'] . '</td>';
+          $tabla .= '<td class="center">' . ucwords($value['tiene_casco']) . '</td>';
+          $tabla .= '<td class="center">' . ucwords($value['tipo_cobro']) . '</td>';
           $tabla .= '</tr>';
         }
 
@@ -297,15 +297,14 @@ class Home extends Controller
         $html = ob_get_clean();
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
-        $dompdf->setPaper([0,0,300,750], 'portrait');
+        $dompdf->setPaper([0,0,300,1820], 'portrait');
         $dompdf->render();
-        $dompdf->stream("Comprobante de ingreso.pdf", array("Attachment" => false, 'isRemoteEnabled' => true));
+        $dompdf->stream("Tiquete de ingreso.pdf", array("Attachment" => false, 'isRemoteEnabled' => true));
       }
   }
 
   public function comprobanteSalida()
   {
-
     $id = $_GET['id'];
 
       if(isset($id))
@@ -333,7 +332,7 @@ class Home extends Controller
         $dompdf->loadHtml($html);
         $dompdf->setPaper([0,0,350,770], 'portrait');
         $dompdf->render();
-        $dompdf->stream("Comprobante de salida.pdf", array("Attachment" => false, 'isRemoteEnabled' => true));
+        $dompdf->stream("Tiquete de salida.pdf", array("Attachment" => false, 'isRemoteEnabled' => true));
       }
   }
 
@@ -443,6 +442,7 @@ class Home extends Controller
           $html .= '    <td id="td-hora">' . $value['hora_llegada'] . '</td>';
           $html .= '   </tr>';
         }
+
         echo json_encode([
           'html' => $html,
           'id' => $busqueda[0]['id'],
@@ -455,15 +455,7 @@ class Home extends Controller
       }
       else
       {
-        $html = "";
-        $html .= '<tr><td colspan="4">';
-        $html .= '<strong><p class="text-center">No se encontrarón datos con la ';
-        $html .= 'información proporcionada, por favor ingrese otra placa...!</p></strong>';
-        $html .= '</td></tr>';
-
-        echo json_encode([
-          'html' => $html,
-        ]);
+        echo 2;
       }
     }
     else

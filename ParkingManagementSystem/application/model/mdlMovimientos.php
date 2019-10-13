@@ -85,6 +85,15 @@ class mdlMovimientos
     return $stm->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  public function listarIngresosAnuales()
+  {
+    $sql = "CALL  SP_listarIngresosAnuales(?)";
+    $stm = $this->db->prepare($sql);
+    $stm->bindParam(1, $this->fechaLlegada);
+    $stm->execute();
+    return $stm->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function buscarPlaca()
   {
     $sql = "CALL  SP_buscarPlaca(?)";

@@ -231,5 +231,60 @@ if ($numerosemana > 0 and $numerosemana < 54)
       <strong>Total Mes: <?= count($registrosMensuales); ?></strong>
     </div>
   </div>
+
+  <div class="row text-center top">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <h2 class="top"><strong>Reporte Anual</strong></h2>
+        <h3>Desde <?php echo $principioaño; ?> hasta <?php echo $hoy; ?></strong></h3>
+    </div>
+  </div>
+
+  <div class="row text-center">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <table class="table table-striped" id="registrosanuales">
+        <thead class="thead-dark">
+          <tr>
+            <th>Placa</th>
+            <th>Tipo de Vehículo</th>
+            <th>Fecha Llegada</th>
+            <th>Hora Llegada</th>
+            <th>Fecha Salida</th>
+            <th>Hora Salida</th>
+            <th>Tiempo Transcurrido</th>
+            <th>Valor</th>
+            <th>Tipo de Cobro</th>
+            <th>Cliente</th>
+            <th>Tiene Casco</th>
+            <th>Fecha Registro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($registrosAnuales as $anio): ?>
+            <tr>
+              <td><?= $anio['placa']; ?></td>
+              <td><?= $anio['tipo']; ?></td>
+              <td><?= $anio['fecha_llegada']; ?></td>
+              <td><?= $anio['hora_llegada']; ?></td>
+              <td><?= $anio['fecha_salida']; ?></td>
+              <td><?= $anio['hora_salida']; ?></td>
+              <td><?= $anio['transcurrido']; ?></td>
+              <td><?= $anio['valor_cobro']; ?></td>
+              <td><?= $anio['tipo_cobro']; ?></td>
+              <td><?= $anio['cliente']; ?></td>
+              <td><?= $anio['tiene_casco']; ?></td>
+              <td><?= $anio['fecha_registro']; ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12-cl-sm-12 col-md-5">
+      <strong>Total Año: <?= count($registrosAnuales); ?></strong>
+    </div>
+  </div>
+  <br/>
   <br/>
 </div>

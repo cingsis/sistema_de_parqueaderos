@@ -28,7 +28,7 @@ if ($numerosemana > 0 and $numerosemana < 54)
     <div class="col-xs-12 col-sm-12 col-md-12">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <?php require APP . 'view/_templates/logo.php'; ?>
-        
+
           <?php if ($_SERVER['REQUEST_URI'] == "/ParkingManagementSystem/admin/index"): ?>
             <strong><a class="nav-item nav-link color" href="<?= URL;  ?>admin/index">Inicio</a></strong>
           <?php endif; ?>
@@ -56,9 +56,6 @@ if ($numerosemana > 0 and $numerosemana < 54)
     </div>
   </div>
   <div class="row text-center">
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       <table class="table table-striped" id="ingresosdia">
         <thead class="thead-dark">
@@ -97,15 +94,9 @@ if ($numerosemana > 0 and $numerosemana < 54)
         </tbody>
       </table>
     </div>
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
   </div>
   <br/>
   <div class="row">
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
     <div class="col-xs-12-col-sm-12 col-md-12 col-lg-12">
       <strong>Total Día: <?= count($ingresosDiarios); ?></strong>
     </div>
@@ -117,9 +108,6 @@ if ($numerosemana > 0 and $numerosemana < 54)
     </div>
   </div>
   <div class="row text-center">
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       <table class="table table-striped" id="ingresossemanales">
         <thead class="thead-dark">
@@ -158,15 +146,10 @@ if ($numerosemana > 0 and $numerosemana < 54)
         </tbody>
       </table>
     </div>
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
+
   </div>
   <br/>
   <div class="row">
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
     <div class="col-xs-12-cl-sm-12 col-md-5">
       <strong>Total Semana: <?= count($ingresosSemanales); ?></strong>
     </div>
@@ -178,9 +161,6 @@ if ($numerosemana > 0 and $numerosemana < 54)
     </div>
   </div>
   <div class="row text-center">
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       <table class="table table-striped" id="registrosmensuales">
         <thead class="thead-dark">
@@ -219,18 +199,67 @@ if ($numerosemana > 0 and $numerosemana < 54)
         </tbody>
       </table>
     </div>
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
   </div>
   <br/>
   <div class="row">
-    <!-- <div class="col-xs-12 col-sm-12 col-md-2">
-      <p>&nbsp;</p>
-    </div> -->
     <div class="col-xs-12-cl-sm-12 col-md-5">
       <strong>Total Mes: <?= count($registrosMensuales); ?></strong>
     </div>
   </div>
+
+  <div class="row text-center top">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <h2 class="top"><strong>Reporte Anual</strong></h2>
+        <h3>Desde <?php echo $principioaño; ?> hasta <?php echo $hoy; ?></strong></h3>
+    </div>
+  </div>
+
+  <div class="row text-center">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <table class="table table-striped" id="registrosanuales">
+        <thead class="thead-dark">
+          <tr>
+            <th>Placa</th>
+            <th>Tipo de Vehículo</th>
+            <th>Fecha Llegada</th>
+            <th>Hora Llegada</th>
+            <th>Fecha Salida</th>
+            <th>Hora Salida</th>
+            <th>Tiempo Transcurrido</th>
+            <th>Valor</th>
+            <th>Tipo de Cobro</th>
+            <th>Cliente</th>
+            <th>Tiene Casco</th>
+            <th>Fecha Registro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($registrosAnuales as $anio): ?>
+            <tr>
+              <td><?= $anio['placa']; ?></td>
+              <td><?= $anio['tipo']; ?></td>
+              <td><?= $anio['fecha_llegada']; ?></td>
+              <td><?= $anio['hora_llegada']; ?></td>
+              <td><?= $anio['fecha_salida']; ?></td>
+              <td><?= $anio['hora_salida']; ?></td>
+              <td><?= $anio['transcurrido']; ?></td>
+              <td><?= $anio['valor_cobro']; ?></td>
+              <td><?= $anio['tipo_cobro']; ?></td>
+              <td><?= $anio['cliente']; ?></td>
+              <td><?= $anio['tiene_casco']; ?></td>
+              <td><?= $anio['fecha_registro']; ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12-cl-sm-12 col-md-5">
+      <strong>Total Año: <?= count($registrosAnuales); ?></strong>
+    </div>
+  </div>
+  <br/>
   <br/>
 </div>

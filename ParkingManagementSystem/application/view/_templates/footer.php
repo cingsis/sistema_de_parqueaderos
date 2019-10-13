@@ -21,12 +21,13 @@
     $("#ingresosdia").DataTable();
     $("#ingresossemanales").DataTable();
     $("#registrosmensuales").DataTable();
+    $("#registrosanuales").DataTable();
   });
 </script>
 
-    <script>
-        var url = "<?php echo URL; ?>";
-    </script>
+<script>
+    var url = "<?php echo URL; ?>";
+</script>
 
     <script src="<?php echo URL; ?>js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo URL; ?>js/bootstrap.min.js"></script>

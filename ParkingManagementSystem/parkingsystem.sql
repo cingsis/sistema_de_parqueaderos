@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-09-2019 a las 00:00:36
+-- Tiempo de generación: 13-10-2019 a las 23:12:29
 -- Versión del servidor: 10.1.19-MariaDB
 -- Versión de PHP: 5.6.28
 
@@ -24,6 +24,27 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_buscarPlaca` (IN `_placa` VARCHAR(30) CHARSET utf8)  NO SQL
+SELECT
+id,
+placa,
+tipo,
+fecha_llegada,
+hora_llegada
+FROM movimientos
+WHERE placa = _placa
+AND estado_salida = 0
+ORDER BY placa ASC$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_buscarTodos` ()  NO SQL
+SELECT
+placa, 
+tipo,
+fecha_llegada,
+hora_llegada
+FROM movimientos
+ORDER BY placa ASC$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_cambiarEstadoUsuario` (IN `_id` INT)  NO SQL
 BEGIN
 	UPDATE usuarios 
@@ -46,9 +67,9 @@ BEGIN
     AND estado = "Activo";
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_guardarIngreso` (IN `_placa` VARCHAR(30) CHARSET utf8, IN `_tipo` VARCHAR(30) CHARSET utf8, IN `_fechaLlegada` VARCHAR(30) CHARSET utf8, IN `_horaLlegada` VARCHAR(30) CHARSET utf8, IN `_usuarioLlegada` VARCHAR(30) CHARSET utf8, IN `_tipoCobro` VARCHAR(30) CHARSET utf8, IN `_tieneCasco` VARCHAR(30) CHARSET utf8)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_guardarIngreso` (IN `_placa` VARCHAR(10) CHARSET utf8, IN `_tipo` VARCHAR(30) CHARSET utf8, IN `_fechaLlegada` VARCHAR(30) CHARSET utf8, IN `_horaLlegada` VARCHAR(30) CHARSET utf8, IN `_usuarioLlegada` VARCHAR(30) CHARSET utf8, IN `_tipoCobro` VARCHAR(30) CHARSET utf8, IN `_tieneCasco` VARCHAR(30) CHARSET utf8)  NO SQL
 BEGIN
-	INSERT INTO movimientos (placa, tipo, fecha_llegada, hora_llegada, usuario_llegada, tipo_cobro, tiene_casco)
+	INSERT INTO movimientos (placa, tipo, fecha_llegada, hora_llegada, usuario_llegada, tipo_cobro, tiene_casco, estado_salida)
 	VALUES
 	(
     	_placa,
@@ -57,7 +78,8 @@ BEGIN
         _horaLlegada,
         _usuarioLlegada,
         _tipoCobro,
-        _tieneCasco
+        _tieneCasco,
+        0
     );
 END$$
 
@@ -76,6 +98,90 @@ BEGIN
     );
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_listarIngresosAnuales` (IN `_principioAnio` VARCHAR(30) CHARSET utf8)  NO SQL
+SELECT
+id,
+placa,
+tipo,
+fecha_llegada,
+hora_llegada,
+usuario_llegada,
+fecha_salida,
+hora_salida,
+usuario_salida,
+transcurrido,
+valor_cobro,
+tipo_cobro,
+cliente,
+tiene_casco,
+estado_salida,
+fecha_registro
+FROM movimientos 
+WHERE fecha_llegada BETWEEN _principioAnio AND now()$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_listarIngresosDiarios` (IN `_hoy` VARCHAR(30) CHARSET utf8)  NO SQL
+SELECT
+id,
+placa,
+tipo,
+fecha_llegada,
+hora_llegada,
+usuario_llegada,
+fecha_salida,
+hora_salida,
+usuario_salida,
+transcurrido,
+valor_cobro,
+tipo_cobro,
+cliente,
+tiene_casco,
+estado_salida,
+fecha_registro
+FROM movimientos
+WHERE fecha_llegada = _hoy$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_listarIngresosMensuales` (IN `_primer_dia_mes` VARCHAR(30) CHARSET utf8)  NO SQL
+SELECT
+id,
+placa,
+tipo,
+fecha_llegada,
+hora_llegada,
+usuario_llegada,
+fecha_salida,
+hora_salida,
+usuario_salida,
+transcurrido,
+valor_cobro,
+tipo_cobro,
+cliente,
+tiene_casco,
+estado_salida,
+fecha_registro
+FROM movimientos 
+WHERE fecha_llegada BETWEEN _primer_dia_mes AND now()$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_listarIngresosSemanales` (IN `_primer_dia` VARCHAR(30) CHARSET utf8)  NO SQL
+SELECT 
+id,
+placa,
+tipo,
+fecha_llegada,
+hora_llegada,
+usuario_llegada,
+fecha_salida,
+hora_salida,
+usuario_salida,
+transcurrido,
+valor_cobro,
+tipo_cobro,
+cliente,
+tiene_casco,
+estado_salida,
+fecha_registro
+FROM movimientos
+WHERE fecha_llegada  BETWEEN _primer_dia AND now()$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_listarUsuarios` ()  NO SQL
 BEGIN
 	SELECT
@@ -87,6 +193,55 @@ BEGIN
     fecha_creacion
     FROM usuarios;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_registrarSalida` (IN `_tipo` VARCHAR(30) CHARSET utf8, IN `_fechaSalida` VARCHAR(30) CHARSET utf8, IN `_horaSalida` VARCHAR(30) CHARSET utf8, IN `_transcurrido` VARCHAR(30) CHARSET utf8, IN `_valorCobro` VARCHAR(30) CHARSET utf8, IN `_usuario` VARCHAR(30) CHARSET utf8, IN `_estado` INT, IN `_id` INT)  NO SQL
+UPDATE movimientos
+SET tipo = _tipo,
+fecha_salida = _fechaSalida,
+hora_salida = _horaSalida,
+transcurrido = _transcurrido,
+valor_cobro = _valorCobro,
+usuario_salida = _usuario,
+estado_salida = _estado
+WHERE id = _id
+AND estado_salida = 0$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_traerDetalleRegistroEntrada` (IN `_id` INT)  NO SQL
+SELECT
+id,
+placa, 
+fecha_llegada,
+hora_llegada,
+usuario_llegada,
+tiene_casco,
+tipo_cobro
+FROM movimientos
+WHERE id = _id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_traerDetalleRegistroSalida` (IN `_id` INT)  NO SQL
+SELECT
+id,
+placa,
+tipo,
+fecha_llegada,
+hora_llegada,
+usuario_llegada,
+fecha_salida,
+hora_salida,
+usuario_salida,
+transcurrido,
+valor_cobro,
+tipo_cobro,
+cliente,
+tiene_casco,
+estado_salida,
+fecha_registro
+FROM movimientos
+WHERE id = _id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ultimoId` ()  NO SQL
+SELECT MAX(id) AS ultimoId
+FROM movimientos$$
 
 DELIMITER ;
 
@@ -110,7 +265,7 @@ CREATE TABLE `clientes` (
 
 CREATE TABLE `movimientos` (
   `id` int(8) NOT NULL,
-  `placa` varchar(6) CHARACTER SET utf8 NOT NULL,
+  `placa` varchar(10) CHARACTER SET utf8 NOT NULL,
   `tipo` varchar(30) CHARACTER SET utf8 NOT NULL,
   `fecha_llegada` varchar(30) CHARACTER SET utf8 NOT NULL,
   `hora_llegada` varchar(30) CHARACTER SET utf8 NOT NULL,
@@ -123,7 +278,7 @@ CREATE TABLE `movimientos` (
   `tipo_cobro` varchar(30) CHARACTER SET utf8 NOT NULL,
   `cliente` int(10) DEFAULT NULL,
   `tiene_casco` varchar(10) CHARACTER SET utf8 NOT NULL,
-  `e_s` int(1) DEFAULT NULL,
+  `estado_salida` int(1) DEFAULT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -131,13 +286,12 @@ CREATE TABLE `movimientos` (
 -- Volcado de datos para la tabla `movimientos`
 --
 
-INSERT INTO `movimientos` (`id`, `placa`, `tipo`, `fecha_llegada`, `hora_llegada`, `usuario_llegada`, `fecha_salida`, `hora_salida`, `usuario_salida`, `transcurrido`, `valor_cobro`, `tipo_cobro`, `cliente`, `tiene_casco`, `e_s`, `fecha_registro`) VALUES
-(1, 'fgh123', 'carro', '2019-09-22', '11:59:20', 'demo', '2019-09-22', '12:02:38', 'demo', '00:03:18', 0, 'horas', NULL, '', 1, '2019-09-29 20:44:19'),
-(2, 'fgh123', 'carro', '2019-09-22', '11:59:54', 'demo', '2019-09-22', '12:02:38', 'demo', '00:03:18', 0, 'horas', NULL, '', 1, '2019-09-29 20:44:19'),
-(3, 'fgh123', 'carro', '2019-09-25', '18:15:35', 'demo', '0000-00-00', '00:00:00', ' ', '00:00:00', 0, 'horas', NULL, '', 0, '2019-09-29 20:44:19'),
-(4, 'sdasda', 'Moto', '29-09-2019', '16:42:05', 'juan', NULL, NULL, NULL, NULL, NULL, 'horas', NULL, 'no', NULL, '2019-09-29 21:42:23'),
-(5, 'asdasd', 'Moto', '29-09-2019', '16:42:44', 'juan', NULL, NULL, NULL, NULL, NULL, 'horas', NULL, 'si', NULL, '2019-09-29 21:42:54'),
-(6, 'sdfsdf', 'Moto', '29-09-2019', '16:47:23', 'juan', NULL, NULL, NULL, NULL, NULL, 'horas', NULL, 'si', NULL, '2019-09-29 21:47:45');
+INSERT INTO `movimientos` (`id`, `placa`, `tipo`, `fecha_llegada`, `hora_llegada`, `usuario_llegada`, `fecha_salida`, `hora_salida`, `usuario_salida`, `transcurrido`, `valor_cobro`, `tipo_cobro`, `cliente`, `tiene_casco`, `estado_salida`, `fecha_registro`) VALUES
+(1, 'abc123', 'moto', '2019-10-10', '11:59:20', 'demo', ' 2019-10-04', '16:18:48', 'demo', '22:03:13', 238000, 'horas', NULL, '', 0, '2019-09-29 20:44:19'),
+(2, 'abc456', 'moto', '2019-10-02', '11:59:54', 'demo', ' 2019-10-04', '16:18:48', 'demo', '22:03:13', 238000, 'horas', NULL, '', 0, '2019-09-29 20:44:19'),
+(3, 'abc789', 'moto', '2019-10-01', '18:15:35', 'demo', ' 2019-10-04', '16:18:48', 'demo', '22:03:13', 238000, 'horas', NULL, '', 0, '2019-09-29 20:44:19'),
+(4, 'qwerty', 'Moto', '2019-10-13', '10:38:53', 'juan', '2019-10-13', '15:56:58', 'juan', '0 días / 05 horas', 5000, 'horas', NULL, 'no', 1, '2019-10-13 15:39:10'),
+(5, 'ASD-12R', 'Moto', '2019-10-13', '11:36:09', 'Juan', '2019-10-13', '12:56:58', 'juan', '0 días / 01 horas', 1000, 'Horas', NULL, 'si', 0, '2019-10-13 16:36:36');
 
 -- --------------------------------------------------------
 
@@ -194,7 +348,7 @@ INSERT INTO `usuarios` (`id`, `login`, `password`, `nombres`, `tipo`, `estado`, 
 (1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Administrador', 1, 'Activo', '2019-09-28 18:45:53'),
 (2, 'demo', '89e495e7941cf9e40e6980d14a16bf023ccd4c91', 'Usuario Regular', 2, 'Activo', '2019-09-28 18:45:53'),
 (3, 'juan', 'a4cbb2f3933c5016da7e83fd135ab8a48b67bf61', 'Juan David', 1, 'Activo', '2019-09-28 18:45:53'),
-(4, 'test', '6e45a996ca8c1c3bb0a7807c039dfffb02c0cad2', 'Test', 2, 'Activo', '2019-09-28 18:45:53');
+(4, 'test', '6e45a996ca8c1c3bb0a7807c039dfffb02c0cad2', 'Test', 2, 'Inactivo', '2019-09-28 18:45:53');
 
 -- --------------------------------------------------------
 
@@ -219,7 +373,7 @@ CREATE TABLE `vehiculos` (
 -- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vista1` (
-`placa` varchar(6)
+`placa` varchar(10)
 );
 
 -- --------------------------------------------------------
@@ -284,7 +438,7 @@ ALTER TABLE `vehiculos`
 -- AUTO_INCREMENT de la tabla `movimientos`
 --
 ALTER TABLE `movimientos`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --

@@ -56,6 +56,9 @@ class Admin extends Controller
       $this->mdlMovimientos->__SET("fechaLlegada", $primerdiames);
       $registrosMensuales = $this->mdlMovimientos->listarIngresosMensuales();
 
+      $this->mdlMovimientos->__SET("fechaLlegada", $principioaño);
+      $registrosAnuales = $this->mdlMovimientos->listarIngresosAnuales();
+
       require APP . 'view/_templates/header.php';
       require APP . 'view/admin/index.php';
       require APP . 'view/_templates/footer.php';
@@ -112,6 +115,9 @@ class Admin extends Controller
 
       $this->mdlMovimientos->__SET("fechaLlegada", $primerdiames);
       $registrosMensuales = $this->mdlMovimientos->listarIngresosMensuales();
+
+      $this->mdlMovimientos->__SET("fechaLlegada", $principioaño);
+      $registrosAnuales = $this->mdlMovimientos->listarIngresosAnuales();
 
       require APP . 'view/_templates/header.php';
       require APP . 'view/admin/ingresosFecha.php';
@@ -211,9 +217,6 @@ class Admin extends Controller
   {
     if (isset($_SESSION['SESION_INICIADA']) && $_SESSION['SESION_INICIADA'] == TRUE)
     {
-
-      if(isset($_POST['guardar']) && $_POST['guardar'] == "Registrar")
-      {
         $id = $_POST['id'];
         $placa = $_POST['numeroplaca'];
         $tipo = $_POST['tipovehiculo'];
@@ -241,11 +244,7 @@ class Admin extends Controller
 
         if($result)
         {
-          $_SESSION['type'] = "success";
-          $_SESSION['message'] = "Registro guardado correctamente!";
-
-          header("Location: " . URL . "home/comprobanteSalida?id=" . $id);
-          exit;
+          echo 1;
         }
         else
         {
@@ -255,8 +254,6 @@ class Admin extends Controller
           header("Location: " . URL . "admin/salidaMotos");
           exit;
         }
-      }
-
     }
   }
 }
