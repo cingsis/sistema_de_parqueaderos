@@ -32,6 +32,7 @@ if ($numerosemana > 0 and $numerosemana < 54)
           <?php if ($_SERVER['REQUEST_URI'] == "/ParkingManagementSystem/admin/index"): ?>
             <strong><a class="nav-item nav-link color" href="<?= URL;  ?>admin/index">Inicio</a></strong>
           <?php endif; ?>
+
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-item nav-link" href="<?= URL; ?>admin/newUser">Nuevo Usuario</a>
@@ -39,16 +40,63 @@ if ($numerosemana > 0 and $numerosemana < 54)
             <a class="nav-item nav-link" href="<?= URL; ?>admin/salidaMotos">Salida de Motos</a>
             <a class="nav-item nav-link" href="<?= URL; ?>admin/reporteUsuarios">Reporte Usuarios</a>
             <a class="nav-item nav-link" href="<?= URL; ?>admin/ingresosPorFecha">Reporte de ingresos por fecha</a>
-            <a class="nav-item nav-link logout" href="<?= URL; ?>home/cerrarSesion">Salir&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i></a>
           </div>
         </div>
-          <?php require APP . 'view/_templates/perfil.php'; ?>
+
+      <div class="dropdown">
+        <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-tie"></i>&nbsp;
+           <strong><?= $_SESSION['login']; ?> (<?= ($_SESSION['tipo'] == 1) ? 'Administrador' : 'Usuario Regular' ?>)</strong>&nbsp;
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item logout" href="<?= URL; ?>home/cerrarSesion">Salir&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i></a>
+
+          <?php if ($_SERVER['REQUEST_URI'] == "/ParkingManagementSystem/admin/index"): ?>
+            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalValores"><i class="fas fa-cogs"></i>&nbsp;Configurar Tarifas</a>
+          <?php else: ?>
+          <?php endif;  ?>
+
+          <a class="dropdown-item" href="<?= URL; ?>home/configuracionPerfil"><i class="fas fa-user-cog"></i>&nbsp;Configuración del Perfil</a>
+        </div>
+      </div>
+
       </nav>
     </div>
   </div>
 </div>
 
 <div class="container body">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-3">
+      &nbsp;
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 top">
+      <?php if (isset($_SESSION['message']) && isset($_SESSION['type']) &&
+                $_SESSION['type'] == "success"): ?>
+
+        <div class="alert alert-<?= $_SESSION['type'] ?>" role="alert">
+          <i class="far fa-laugh-beam fa-2x"></i>&nbsp;<?= $_SESSION['message']; ?>
+        </div>
+
+      <?php unset($_SESSION['message'], $_SESSION['type']); ?>
+      <?php endif; ?>
+
+      <?php if (isset($_SESSION['message']) && isset($_SESSION['type']) &&
+                $_SESSION['type'] == "danger"): ?>
+
+        <div class="alert alert-<?= $_SESSION['type'] ?>" role="alert">
+          <i class="far fa-angry fa-2x"></i>&nbsp;<?= $_SESSION['message']; ?>
+        </div>
+
+      <?php unset($_SESSION['message'], $_SESSION['type']); ?>
+      <?php endif; ?>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-3">
+      &nbsp;
+    </div>
+  </div>
+
   <div class="row text-center top">
     <div class="col-xs-12 col-sm-12 col-md-12">
       <h2 class="top"><strong>Reporte Diario</strong></h2>

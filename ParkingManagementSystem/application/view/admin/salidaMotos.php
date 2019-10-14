@@ -16,10 +16,27 @@
                 <?php endif; ?>
             <a class="nav-item nav-link" href="<?= URL; ?>admin/reporteUsuarios">Reporte de Usuarios</a>
             <a class="nav-item nav-link" href="<?= URL; ?>admin/ingresosPorFecha">Reporte de ingresos por fecha</a>
-            <a class="nav-item nav-link logout" href="<?= URL; ?>home/cerrarSesion">Salir&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i></a>
           </div>
         </div>
-          <?php require APP . 'view/_templates/perfil.php'; ?>
+
+        <div class="dropdown">
+          <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user-tie"></i>&nbsp;
+             <strong><?= $_SESSION['login']; ?> (<?= ($_SESSION['tipo'] == 1) ? 'Administrador' : 'Usuario Regular' ?>)</strong>&nbsp;
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item logout" href="<?= URL; ?>home/cerrarSesion">Salir&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i></a>
+
+            <?php if ($_SERVER['REQUEST_URI'] == "/ParkingManagementSystem/admin/index"): ?>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalValores"><i class="fas fa-cogs"></i>&nbsp;Configurar Tarifas</a>
+            <?php else: ?>
+            <?php endif;  ?>
+
+            <a class="dropdown-item" href="<?= URL; ?>home/configuracionPerfil"><i class="fas fa-user-cog"></i>&nbsp;Configuración del Perfil</a>
+          </div>
+        </div>
+
       </nav>
     </div>
   </div>
@@ -131,20 +148,6 @@
       &nbsp;
     </div>
   </div>
-
-  <!-- <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
-      <p>&nbsp;</p>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
-
-
-
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
-      <p>&nbsp;</p>
-    </div>
-  </div> -->
 
   <form class="form-horizontal" method="post" autocomplete="off" name="registrosalida" id="RegistroSalida">
     <div class="row">

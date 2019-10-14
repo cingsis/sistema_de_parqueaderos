@@ -5,12 +5,14 @@ class Admin extends Controller
   private $mdlLogin;
   private $mdlAdmin;
   private $mdlMovimientos;
+  private $mdlTarifas;
 
   public function __construct()
   {
     $this->mdlLogin = $this->LoadModel('mdlLogin');
     $this->mdlAdmin = $this->LoadModel('mdlAdmin');
     $this->mdlMovimientos = $this->LoadModel('mdlMovimientos');
+    $this->mdlTarifas = $this->LoadModel('mdlTarifas');
   }
 
   private function Encrypt($string)
@@ -29,6 +31,8 @@ class Admin extends Controller
   {
     if (isset($_SESSION['SESION_INICIADA']) && $_SESSION['SESION_INICIADA'] == TRUE)
     {
+      $tarifas =  $this->mdlTarifas->listarTarifas();
+
       $hoy = date('Y-m-d');
       $numeroSemana = date("W");
       $año = date('Y');

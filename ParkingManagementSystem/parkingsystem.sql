@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-10-2019 a las 23:12:29
+-- Tiempo de generación: 14-10-2019 a las 22:33:58
 -- Versión del servidor: 10.1.19-MariaDB
 -- Versión de PHP: 5.6.28
 
@@ -24,6 +24,27 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_actualizarContrasenia` (IN `_pass` VARCHAR(255) CHARSET utf8, IN `_id` INT)  NO SQL
+UPDATE usuarios
+SET password = _pass
+WHERE id = _id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_actualizarTarifas` (IN `_tipo` VARCHAR(30) CHARSET utf8, IN `_hora` VARCHAR(30) CHARSET utf8, IN `_horaAdicional` VARCHAR(30) CHARSET utf8, IN `_hora2` VARCHAR(30) CHARSET utf8, IN `_dia` VARCHAR(30) CHARSET utf8, IN `_mes` VARCHAR(30) CHARSET utf8, IN `_id` INT)  NO SQL
+UPDATE tarifas
+SET tipo = _tipo,
+valor_hora = _hora,
+valor_adicional = _horaAdicional,
+valor_2 = _hora2,
+valor_dia = _dia,
+valor_mensualidad = _mes
+WHERE id = _id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_actualizarUsuario` (IN `_login` VARCHAR(30) CHARSET utf16le, IN `_nombres` VARCHAR(255) CHARSET utf8, IN `_id` INT)  NO SQL
+UPDATE usuarios
+SET login = _login,
+nombres = _nombres
+WHERE id = _id$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_buscarPlaca` (IN `_placa` VARCHAR(30) CHARSET utf8)  NO SQL
 SELECT
 id,
@@ -51,6 +72,16 @@ BEGIN
 	SET estado = (CASE WHEN estado = "Activo" THEN "Inactivo" ELSE "Activo" END) 
 	WHERE id = _id;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_consultarInfoUsuario` (IN `_id` INT)  NO SQL
+SELECT
+id,
+login,
+nombres,
+tipo,
+estado
+FROM usuarios
+WHERE id = _id$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_consultarUsuarios` (IN `_login` VARCHAR(50) CHARSET utf8, IN `_pass` VARCHAR(255) CHARSET utf8)  NO SQL
 BEGIN
@@ -181,6 +212,20 @@ estado_salida,
 fecha_registro
 FROM movimientos
 WHERE fecha_llegada  BETWEEN _primer_dia AND now()$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_listarTarifas` ()  NO SQL
+SELECT
+id,
+tipo,
+tiempo,
+valor_hora,
+valor_adicional,
+valor_2,
+valor_dia,
+valor_mensualidad,
+descuento,
+aplica_descuento
+FROM tarifas$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_listarUsuarios` ()  NO SQL
 BEGIN
@@ -317,12 +362,24 @@ CREATE TABLE `pagos` (
 
 CREATE TABLE `tarifas` (
   `id` int(11) NOT NULL,
-  `tipo` varchar(6) NOT NULL,
-  `tiempo` varchar(6) NOT NULL,
-  `valor_tarifa` int(7) NOT NULL,
-  `descuento` int(3) NOT NULL,
-  `aplica_descuento` int(1) NOT NULL
+  `tipo` varchar(30) CHARACTER SET utf8 NOT NULL,
+  `tiempo` varchar(30) CHARACTER SET utf8 NOT NULL,
+  `valor_hora` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '1000',
+  `valor_adicional` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '500',
+  `valor_2` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '1800',
+  `valor_dia` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '4000',
+  `valor_mensualidad` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '20000',
+  `descuento` int(5) DEFAULT NULL,
+  `aplica_descuento` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `tarifas`
+--
+
+INSERT INTO `tarifas` (`id`, `tipo`, `tiempo`, `valor_hora`, `valor_adicional`, `valor_2`, `valor_dia`, `valor_mensualidad`, `descuento`, `aplica_descuento`, `fecha_actualizacion`) VALUES
+(1, 'Tarifas', '', '1000', '500', '1800', '4000', '20000', 0, '0', '2019-10-14 17:50:41');
 
 -- --------------------------------------------------------
 
@@ -448,7 +505,7 @@ ALTER TABLE `pagos`
 -- AUTO_INCREMENT de la tabla `tarifas`
 --
 ALTER TABLE `tarifas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --

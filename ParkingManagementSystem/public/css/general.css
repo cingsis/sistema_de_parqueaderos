@@ -8,6 +8,29 @@ body{
   overflow-x: hidden;
 }
 
+/* Estilos opción actualizar contraseña */
+.updatePass{
+  text-decoration: none;
+  margin: 0 0 0 45%;
+  color: #aa9ca1;
+  font-weight: 600;
+}
+
+.updatePass:hover{
+  text-decoration: none;
+  margin: 0 0 0 45%;
+  color: #aa9ca1;
+  font-weight: 600;
+}
+
+.updatePass:active{
+  text-decoration: none;
+  margin: 0 0 0 45%;
+  color: #aa9ca1;
+  font-weight: 600;
+}
+/* Fin estilos actualizar contraseña */
+
 /* Footer */
 .footer
 {
@@ -183,6 +206,10 @@ body{
 
 /* Select tipo de usuario formulario registro de usuarios*/
 #type{
+  padding-bottom: 3px !important;
+}
+
+#TypeUser{
   padding-bottom: 3px !important;
 }
 

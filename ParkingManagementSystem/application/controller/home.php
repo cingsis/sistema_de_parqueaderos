@@ -7,12 +7,14 @@ class Home extends Controller
   private $mdlLogin;
   private $mdlAdmin;
   private $mdlMovimientos;
+  private $mdlTarifas;
 
   public function __construct()
   {
     $this->mdlLogin = $this->LoadModel('mdlLogin');
     $this->mdlAdmin = $this->LoadModel('mdlAdmin');
     $this->mdlMovimientos = $this->LoadModel('mdlMovimientos');
+    $this->mdlTarifas = $this->LoadModel('mdlTarifas');
   }
 
   private function Encrypt($string)
@@ -112,14 +114,22 @@ class Home extends Controller
 
   public function cerrarSesion()
   {
-    unset($_SESSION['SESION_INICIADA'],$_SESSION['id'],$_SESSION['tipo'],
+    if(isset($_SESSION['SESION_INICIADA']) && $_SESSION['SESION_INICIADA'] == TRUE)
+    {
+      unset($_SESSION['SESION_INICIADA'],$_SESSION['id'],$_SESSION['tipo'],
       $_SESSION['login'],$_SESSION['nombres']);
 
-    session_unset();
-    session_destroy();
+      session_unset();
+      session_destroy();
 
-    header('Location:' . URL . 'home/index');
-    exit;
+      header('Location:' . URL . 'home/index');
+      exit;
+    }
+    else
+    {
+      header("Location: " . URL . "home/index");
+      exit;
+    }
   }
 
   public function registro()
@@ -363,6 +373,8 @@ class Home extends Controller
 
       if(count($busqueda) != 0)
       {
+        $tarifas =  $this->mdlTarifas->listarTarifas();
+
         $fecha_salida = date('Y-m-d');
         $hora_salida = date('H:i:s');
 
@@ -430,7 +442,7 @@ class Home extends Controller
         	$transcurrido = date("H:i:s",mktime($difh,$difm,$difs));
         //	echo 'Diferencia : ', $transcurrido;
 
-        	$valor_cobro = $thdif * 1000;
+        	$valor_cobro = $thdif * $tarifas[0]['valor_hora'];
 
         $html = "";
         foreach ($busqueda as $key => $value)
@@ -456,6 +468,183 @@ class Home extends Controller
       else
       {
         echo 2;
+      }
+    }
+    else
+    {
+      header("Location: " . URL . "home/index");
+      exit;
+    }
+  }
+
+  public function configuracionValores()
+  {
+    if (isset($_SESSION['SESION_INICIADA']) &&
+        $_SESSION['SESION_INICIADA'] == TRUE)
+    {
+      if (isset($_POST['guardarvalores']))
+      {
+        $valorHora = $_POST['valorhora'];
+        $valorHoraAdic = $_POST['valoradicional'];
+        $valorHora2 = $_POST['valorhora2'];
+        $valorDia = $_POST['valordia'];
+        $valorMes = $_POST['valormensualidad'];
+        $tipo = "Tarifas";
+        $id = $_POST['idtarifa'];
+
+        $this->mdlTarifas->__SET("tipo", $tipo);
+        $this->mdlTarifas->__SET("valorHora", $valorHora);
+        $this->mdlTarifas->__SET("valorAdicional", $valorHoraAdic);
+        $this->mdlTarifas->__SET("valor2", $valorHora2);
+        $this->mdlTarifas->__SET("valorDia", $valorDia);
+        $this->mdlTarifas->__SET("valorMensualidad", $valorMes);
+        $this->mdlTarifas->__SET("id", (int)$id);
+        $tarifas = $this->mdlTarifas->actualizarTarifas();
+
+        if($tarifas)
+        {
+          $_SESSION['type'] = "success";
+          $_SESSION['message'] = "Las tarifas fuerón actualizadas correctamente!";
+
+          header("Location: " . URL . "admin/index");
+          exit;
+        }
+        else
+        {
+          $_SESSION['type'] = "danger";
+          $_SESSION['message'] = "Ha ocurrido un error al intentar actualizar los datos, por favor inténtelo de nuevo!";
+
+          header("Location: " . URL . "admin/index");
+          exit;
+        }
+
+      }
+      else
+      {
+        header("Location: " . URL . "admin/index");
+        exit;
+      }
+    }
+    else
+    {
+      header("Location: " . URL . "home/index");
+      exit;
+    }
+  }
+
+  public function configuracionPerfil()
+  {
+    if (isset($_SESSION['SESION_INICIADA']) &&
+        $_SESSION['SESION_INICIADA'] == TRUE)
+    {
+      $id = $_SESSION['id'];
+
+      $this->mdlLogin->__SET('id', (int)$id);
+      $datosUsuario = $this->mdlLogin->consultarInfoUsuario();
+
+      require APP . 'view/_templates/header.php';
+      require APP . 'view/admin/perfil.php';
+      require APP . 'view/_templates/footer.php';
+    }
+    else
+    {
+      header("Location: " . URL . "home/index");
+      exit;
+    }
+  }
+
+  public function actualizacionPassword()
+  {
+    if (isset($_SESSION['SESION_INICIADA']) &&
+        $_SESSION['SESION_INICIADA'] == TRUE)
+    {
+      if(isset($_POST['guardarnuevapass']))
+      {
+        if ($_POST['repetirpass'] == $_POST['nuevopass'])
+        {
+          $pass = $_POST['nuevopass'];
+          $id = $_POST['iduser'];
+
+          $this->mdlLogin->__SET("password", $this->Encrypt($pass));
+          $this->mdlLogin->__SET("id", (int)$id);
+          $actualizacion = $this->mdlLogin->actualizarContrasenia();
+
+          if($actualizacion)
+          {
+            $_SESSION['type'] = "success";
+            $_SESSION['message'] = "La contraseña fue actualizada correctamente!";
+
+            header("Location: " . URL . "home/configuracionPerfil");
+            exit;
+          }
+          else
+          {
+            $_SESSION['error'] = "danger";
+            $_SESSION['messageerror'] = "Ha ocurrido un error al intentar actualizar los datos, por favor inténtelo de nuevo!";
+
+            header("Location: " . URL . "home/configuracionPerfil");
+            exit;
+          }
+        }
+        else
+        {
+          $_SESSION['errorpass'] = "danger";
+          $_SESSION['messagepass'] = "Las contraseñas ingresadas no coinciden, por favor inténtelo de nuevo!";
+
+          header("Location: " . URL . "home/configuracionPerfil");
+          exit;
+        }
+      }
+      else
+      {
+        header("Location: " . URL . "home/configuracionPerfil");
+        exit;
+      }
+    }
+    else
+    {
+      header("Location: " . URL . "home/index");
+      exit;
+    }
+  }
+
+  public function ajustesPerfil()
+  {
+    if (isset($_SESSION['SESION_INICIADA']) &&
+        $_SESSION['SESION_INICIADA'] == TRUE)
+    {
+      if (isset($_POST['guardarperfil']))
+      {
+        $Usuario = $_POST['nombreusuario'];
+        $nombres = $_POST['nombresperfil'];
+        $id = $_POST['idusuarioperfil'];
+
+        $this->mdlLogin->__SET("login", $Usuario);
+        $this->mdlLogin->__SET("nombres", $nombres);
+        $this->mdlLogin->__SET("id", (int)$id);
+        $actualizacion = $this->mdlLogin->actualizarUsuario();
+
+        if ($actualizacion)
+        {
+          $_SESSION['typeuser'] = "success";
+          $_SESSION['messageuser'] = "La información fue actualizada correctamente!";
+
+          header("Location: " . URL . "home/configuracionPerfil");
+          exit;
+        }
+        else
+        {
+          $_SESSION['erroruser'] = "danger";
+          $_SESSION['message'] = "Ha ocurrido un error, por favor inténtelo de nuevo!";
+
+          header("Location: " . URL . "home/configuracionPerfil");
+          exit;
+        }
+      }
+      else
+      {
+        header("Location: " . URL . "home/configuracionPerfil");
+        exit;
       }
     }
     else
